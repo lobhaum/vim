@@ -28,6 +28,7 @@ call plug#begin(expand('~/.vim/plugged'))
 "" Plug install packages
 "*****************************************************************************
 Plug 'scrooloose/nerdtree'
+Plug 'ryanoasis/vim-devicons'
 Plug 'jistr/vim-nerdtree-tabs'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
@@ -169,6 +170,8 @@ set t_Co=256
 set guioptions=egmrti
 set gfn=Monospace\ 10
 
+set guifont=DroidSansMono\ Nerd\ Font\ 11
+
 if has("gui_running")
   if has("gui_mac") || has("gui_macvim")
     set guifont=Menlo:h12
@@ -229,6 +232,7 @@ endif
 " vim-airline
 "let g:airline_theme = 'powerlineish'
 let g:airline_theme = 'dracula'
+let g:airline_powerline_fonts = 1
 let g:airline#extensions#branch#enabled = 1
 let g:airline#extensions#ale#enabled = 1
 let g:airline#extensions#tabline#enabled = 1
@@ -322,6 +326,22 @@ set autoread
 "*****************************************************************************
 "" Mappings
 "*****************************************************************************
+"" Node
+nnoremap <silent> <F7> :!node %<CR>
+
+"" Desabilitando arrow keys
+nnoremap <Up> <Nop>
+nnoremap <Down> <Nop>
+nnoremap <Left> <Nop>
+nnoremap <Right> <Nop>
+inoremap <Up> <Nop>
+inoremap <Down> <Nop>
+inoremap <Left> <Nop>
+inoremap <Right> <Nop>
+vnoremap <Up> <Nop>
+vnoremap <Down> <Nop>
+vnoremap <Left> <Nop>
+vnoremap <Right> <Nop>
 
 "" Split
 noremap <Leader>h :<C-u>split<CR>
