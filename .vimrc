@@ -28,6 +28,7 @@ call plug#begin(expand('~/.vim/plugged'))
 "" Plug install packages
 "*****************************************************************************
 Plug 'scrooloose/nerdtree'
+Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'ryanoasis/vim-devicons'
 Plug 'jistr/vim-nerdtree-tabs'
 Plug 'tpope/vim-commentary'
@@ -170,7 +171,7 @@ set t_Co=256
 set guioptions=egmrti
 set gfn=Monospace\ 10
 
-set guifont=DroidSansMono\ Nerd\ Font\ 11
+set guifont=DroidSansMono\ Nerd\ Font\ Mono\ 11
 
 if has("gui_running")
   if has("gui_mac") || has("gui_macvim")
@@ -228,6 +229,19 @@ nnoremap N Nzzzv
 if exists("*fugitive#statusline")
   set statusline+=%{fugitive#statusline()}
 endif
+" configurações git para NERDTree
+let g:NERDTreeIndicatorMapCustom = {
+    \ "Modified"  : "✹",
+    \ "Staged"    : "✚",
+    \ "Untracked" : "✭",
+    \ "Renamed"   : "➜",
+    \ "Unmerged"  : "═",
+    \ "Deleted"   : "✖",
+    \ "Dirty"     : "✗",
+    \ "Clean"     : "✔︎",
+    \ 'Ignored'   : '☒',
+    \ "Unknown"   : "?"
+    \ }
 
 " vim-airline
 "let g:airline_theme = 'powerlineish'
