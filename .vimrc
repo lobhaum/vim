@@ -203,7 +203,17 @@ if &term =~ '256color'
   set t_ut=
 endif
 
-
+"" Definição de colunas
+set colorcolumn=80
+highlight ColorColumn ctermbg=237 guibg=lightgrey
+"" Numero de linha relativo pra cima e pra baixo
+set relativenumber
+"" Higlight linha e coluna
+"set cursorline cursorcolumn
+set cursorline
+"nnoremap <Leader>c :set cursorline! cursorcolumn!<CR>
+hi CursorLine   cterm=NONE ctermbg=237  ctermfg=NONE "guibg=grey guifg=grey
+"hi CursorColumn cterm=NONE ctermbg=0 ctermfg=NONE "guibg=grey guifg=grey
 "" Disable the blinking cursor.
 set gcr=a:blinkon0
 set scrolloff=3
@@ -341,7 +351,9 @@ set autoread
 "" Mappings
 "*****************************************************************************
 "" Node
-nnoremap <silent> <F7> :!node %<CR>
+" nnoremap <silent> <F7> :!node %<CR>
+"" Python3
+nnoremap <silent> <F7> :!python3 %<CR>
 
 "" Desabilitando arrow keys
 nnoremap <Up> <Nop>
@@ -370,7 +382,7 @@ noremap <Leader>gs :Gstatus<CR>
 noremap <Leader>gb :Gblame<CR>
 noremap <Leader>gd :Gvdiff<CR>
 noremap <Leader>gr :Gremove<CR>
-
+nnoremap <silent> <F8> :!git push -u origin master<CR>
 " session management
 nnoremap <leader>so :OpenSession<Space>
 nnoremap <leader>ss :SaveSession<Space>
