@@ -5,7 +5,7 @@
 "*****************************************************************************
 let vimplug_exists=expand('~/.vim/autoload/plug.vim')
 
-let g:vim_bootstrap_langs = "html,javascript,typescript"
+let g:vim_bootstrap_langs = "c,html,javascript,lua,php,python,ruby,rust,scala,typescript"
 let g:vim_bootstrap_editor = "vim"				" nvim or vim
 
 if !filereadable(vimplug_exists)
@@ -23,6 +23,8 @@ endif
 
 " Required:
 call plug#begin(expand('~/.vim/plugged'))
+
+
 
 "*****************************************************************************
 "" Plug install packages
@@ -46,7 +48,8 @@ Plug 'Yggdroot/indentLine'
 Plug 'avelino/vim-bootstrap-updater'
 Plug 'sheerun/vim-polyglot'
 Plug 'tpope/vim-rhubarb' " required by fugitive to :Gbrowse
-
+Plug 'luochen1990/rainbow'
+let g:rainbow_active = 1 "set to 0 if you want to enable it later via :RainbowToggle
 if isdirectory('/usr/local/opt/fzf')
   Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
 else
@@ -70,9 +73,16 @@ Plug 'honza/vim-snippets'
 "" Color
 Plug 'tomasr/molokai'
 
+'
+
 "*****************************************************************************
 "" Custom bundles
 "*****************************************************************************
+
+" c
+Plug 'vim-scripts/c.vim', {'for': ['c', 'cpp']}
+Plug 'ludwig/split-manpage.vim'
+
 
 " html
 "" HTML Bundle
@@ -85,6 +95,48 @@ Plug 'mattn/emmet-vim'
 " javascript
 "" Javascript Bundle
 Plug 'jelera/vim-javascript-syntax'
+
+
+" lua
+"" Lua Bundle
+Plug 'xolox/vim-lua-ftplugin'
+Plug 'xolox/vim-lua-inspect'
+
+
+" php
+"" PHP Bundle
+Plug 'arnaud-lb/vim-php-namespace'
+
+
+" python
+"" Python Bundle
+Plug 'davidhalter/jedi-vim'
+Plug 'raimon49/requirements.txt.vim', {'for': 'requirements'}
+
+
+" ruby
+Plug 'tpope/vim-rails'
+Plug 'tpope/vim-rake'
+Plug 'tpope/vim-projectionist'
+Plug 'thoughtbot/vim-rspec'
+Plug 'ecomba/vim-ruby-refactoring'
+
+
+" rust
+" Vim racer
+Plug 'racer-rust/vim-racer'
+
+" Rust.vim
+Plug 'rust-lang/rust.vim'
+
+
+" scala
+if has('python')
+    " sbt-vim
+    Plug 'ktvoelker/sbt-vim'
+endif
+" vim-scala
+Plug 'derekwyatt/vim-scala'
 
 
 " typescript
@@ -214,6 +266,12 @@ set cursorline
 "nnoremap <Leader>c :set cursorline! cursorcolumn!<CR>
 hi CursorLine   cterm=NONE ctermbg=237  ctermfg=NONE "guibg=grey guifg=grey
 "hi CursorColumn cterm=NONE ctermbg=0 ctermfg=NONE "guibg=grey guifg=grey
+"configurando centro da tela
+augroup VCenterCursor
+  au!
+  au BufEnter,WinEnter,WinNew,VimResized *,*.*
+        \ let &scrolloff=winheight(win_getid())/2
+augroup END
 "" Disable the blinking cursor.
 set gcr=a:blinkon0
 set scrolloff=3
@@ -494,6 +552,11 @@ nnoremap <Leader>o :.Gbrowse<CR>
 "" Custom configs
 "*****************************************************************************
 
+" c
+autocmd FileType c setlocal tabstop=4 shiftwidth=4 expandtab
+autocmd FileType cpp setlocal tabstop=4 shiftwidth=4 expandtab
+
+
 " html
 " for html files, 2 spaces
 autocmd Filetype html setlocal ts=2 sw=2 expandtab
@@ -509,6 +572,103 @@ augroup vimrc-javascript
 augroup END
 
 
+" lua
+
+
+" php
+
+
+" python
+" vim-python
+augroup vimrc-python
+  autocmd!
+  autocmd FileType python setlocal expandtab shiftwidth=4 tabstop=8 colorcolumn=79
+      \ formatoptions+=croq softtabstop=4
+      \ cinwords=if,elif,else,for,while,try,except,finally,def,class,with
+augroup END
+
+" jedi-vim
+let g:jedi#popup_on_dot = 0
+let g:jedi#goto_assignments_command = "<leader>g"
+let g:jedi#goto_definitions_command = "<leader>d"
+let g:jedi#documentation_command = "K"
+let g:jedi#usages_command = "<leader>n"
+let g:jedi#rename_command = "<leader>r"
+let g:jedi#show_call_signatures = "0"
+let g:jedi#completions_command = "<C-Space>"
+let g:jedi#smart_auto_mappings = 0
+
+" ale
+:call extend(g:ale_linters, {
+    \'python': ['flake8'], })
+
+" vim-airline
+let g:airline#extensions#virtualenv#enabled = 1
+
+" Syntax highlight
+" Default highlight is better than polyglot
+let g:polyglot_disabled = ['python']
+let python_highlight_all = 1
+
+
+" ruby
+let g:rubycomplete_buffer_loading = 1
+let g:rubycomplete_classes_in_global = 1
+let g:rubycomplete_rails = 1
+
+augroup vimrc-ruby
+  autocmd!
+  autocmd BufNewFile,BufRead *.rb,*.rbw,*.gemspec setlocal filetype=ruby
+  autocmd FileType ruby set tabstop=2|set shiftwidth=2|set expandtab softtabstop=2
+augroup END
+
+let g:tagbar_type_ruby = {
+    \ 'kinds' : [
+        \ 'm:modules',
+        \ 'c:classes',
+        \ 'd:describes',
+        \ 'C:contexts',
+        \ 'f:methods',
+        \ 'F:singleton methods'
+    \ ]
+\ }
+
+" RSpec.vim mappings
+map <Leader>t :call RunCurrentSpecFile()<CR>
+map <Leader>s :call RunNearestSpec()<CR>
+map <Leader>l :call RunLastSpec()<CR>
+map <Leader>a :call RunAllSpecs()<CR>
+
+" For ruby refactory
+if has('nvim')
+  runtime! macros/matchit.vim
+else
+  packadd! matchit
+endif
+
+" Ruby refactory
+nnoremap <leader>rap  :RAddParameter<cr>
+nnoremap <leader>rcpc :RConvertPostConditional<cr>
+nnoremap <leader>rel  :RExtractLet<cr>
+vnoremap <leader>rec  :RExtractConstant<cr>
+vnoremap <leader>relv :RExtractLocalVariable<cr>
+nnoremap <leader>rit  :RInlineTemp<cr>
+vnoremap <leader>rrlv :RRenameLocalVariable<cr>
+vnoremap <leader>rriv :RRenameInstanceVariable<cr>
+vnoremap <leader>rem  :RExtractMethod<cr>
+
+
+" rust
+" Vim racer
+au FileType rust nmap gd <Plug>(rust-def)
+au FileType rust nmap gs <Plug>(rust-def-split)
+au FileType rust nmap gx <Plug>(rust-def-vertical)
+au FileType rust nmap <leader>gd <Plug>(rust-doc)
+
+
+" scala
+
+
 " typescript
 let g:yats_host_keyword = 1
 
@@ -522,7 +682,7 @@ let g:vim_vue_plugin_load_full_syntax = 1
 
 
 "*****************************************************************************
-"*****************************************************************************
+"********************************************************************
 
 "" Include user's local vim config
 if filereadable(expand("~/.vimrc.local"))
